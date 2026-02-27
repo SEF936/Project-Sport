@@ -1,10 +1,14 @@
 ---
-title: "Routine matinale pour booster votre énergie"
-date: "2025-01-15"
-excerpt: "Commencez vos journées avec cette routine de 15 minutes pour augmenter votre vitalité."
-coverImage: "https://images.unsplash.com/photo-1532619675605-1ede6c2e7611?w=600&h=400&fit=crop"
-tags: ["routine", "énergie", "matin"]
-videoUrl: ""
+title: Routine matinale pour booster votre énergie
+date: 2025-01-15
+excerpt: Commencez vos journées avec cette routine de 15 minutes pour augmenter
+  votre vitalité.
+coverImage: https://youtu.be/oIfrS9vMm7g?si=OAu6pgdt6yEKWajX
+tags:
+  - routine
+  - énergie
+  - matin
+videoUrl: https://youtu.be/oIfrS9vMm7g?si=OAu6pgdt6yEKWajX
 draft: false
 ---
 
