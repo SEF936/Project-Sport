@@ -2,6 +2,10 @@
   command = "npm run build"
   publish = "dist"
 
+# Netlify Identity redirect after email verification
+[context.production.identity]
+  provider = "netlify"
+
 # SPA fallback for Decap CMS admin
 [[redirects]]
   from = "/admin"
@@ -12,3 +16,8 @@
   from = "/admin/*"
   to = "/admin/index.html"
   status = 200
+
+# Redirect after Netlify Identity email confirmation
+[[redirects]]
+  from = "/.netlify/identity/*"
+  to = "/admin"
