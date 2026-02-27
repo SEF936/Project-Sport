@@ -1,13 +1,14 @@
 ---
-title: "Conseil vidéo - Échauffement dynamique"
+title: Conseil vidéo - Échauffement dynamique
 date: 2026-02-27
-excerpt: "Découvrez la routine d'échauffement dynamique en vidéo pour préparer votre corps aux entraînements intenses"
-coverImage: /content/blog/images/r.jpg
+excerpt: Découvrez la routine d'échauffement dynamique en vidéo pour préparer
+  votre corps aux entraînements intenses
+coverImage: https://youtu.be/Gu4JRJ7v5iQ?si=as-LnwT9_lkrgZtZ
 tags:
   - échauffement
   - conseils
   - vidéo
-videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+videoUrl: https://youtu.be/Gu4JRJ7v5iQ?si=as-LnwT9_lkrgZtZ
 draft: false
 ---
 
