@@ -5,33 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestionnaire de Contenu</title>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://unpkg.com/decap-cms@2.10.192/dist/decap-cms.js"></script>
   </head>
   <body>
-    <!-- Decap CMS will mount here -->
   </body>
-  
-  <!-- Decap CMS Script - must be last -->
-  <script src="https://unpkg.com/decap-cms@^3.1.0/dist/decap-cms.js"></script>
-  
-  <script>
-    // Initialize Decap CMS with proper error handling
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initCMS);
-    } else {
-      initCMS();
-    }
-    
-    function initCMS() {
-      if (window.CMS) {
-        try {
-          window.CMS.init();
-        } catch (error) {
-          console.error('Error initializing CMS:', error);
-        }
-      } else {
-        console.warn('CMS not loaded yet, retrying...');
-        setTimeout(initCMS, 500);
-      }
-    }
-  </script>
 </html>
