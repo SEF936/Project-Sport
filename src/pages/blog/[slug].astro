@@ -69,13 +69,15 @@ const canonicalURL = new URL(`/blog/${entry.slug}`, Astro.url);
         ))}
       </div>
 
-      <!-- Cover image -->
-      <img 
-        src={coverImage} 
-        alt={title}
-        class="w-full h-96 object-cover rounded-lg mb-12 shadow-lg"
-        loading="lazy"
-      />
+      <!-- Cover image - only show if no video -->
+      {!videoUrl && (
+        <img 
+          src={coverImage} 
+          alt={title}
+          class="w-full h-96 object-cover rounded-lg mb-12 shadow-lg"
+          loading="lazy"
+        />
+      )}
 
       <!-- Video embed if present -->
       {videoUrl && <VideoEmbed videoUrl={videoUrl} title={`Conseil: ${title}`} />}

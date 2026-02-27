@@ -6,45 +6,71 @@ export interface Props {
 
 const { videoUrl, title = "Vidéo de conseil" } = Astro.props;
 
-// Helper to convert YouTube URLs to embed format
-function normalizeYouTubeUrl(url: string): string {
-  // Handle various YouTube URL formats
-  if (!url) return '';
+// Helper to convert YouTube URLs to embed format and extract ID
+function parseYouTubeUrl(url: string): { embedUrl: string; videoId: string } {
+  let embedUrl = '';
+  let videoId = '';
   
-  // If it's already an embed URL, return as is
-  if (url.includes('youtube.com/embed/')) return url;
+  if (!url) return { embedUrl: '', videoId: '' };
   
+  // If it's already an embed URL, extract the ID
+  if (url.includes('youtube.com/embed/')) {
+    const match = url.match(/embed\/([a-zA-Z0-9_-]{11})/);
+    if (match) {
+      videoId = match[1];
+      embedUrl = url;
+    }
+  }
   // youtube.com/watch?v=ID format
-  const watchMatch = url.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/);
-  if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
-  
+  else if (url.includes('youtube.com/watch')) {
+    const match = url.match(/v=([a-zA-Z0-9_-]{11})/);
+    if (match) {
+      videoId = match[1];
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+  }
   // youtu.be/ID format
-  const shortMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
-  if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
-  
+  else if (url.includes('youtu.be/')) {
+    const match = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (match) {
+      videoId = match[1];
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+  }
   // youtube.com/shorts/ID format
-  const shortsMatch = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/);
-  if (shortsMatch) return `https://www.youtube.com/embed/${shortsMatch[1]}`;
-  
-  // If it doesn't match any pattern but starts with http, return as is (might be Vimeo or other)
-  if (url.startsWith('http')) return url;
-  
-  // If it's just an ID, construct the embed URL
-  if (url.length === 11 && /^[a-zA-Z0-9_-]+$/.test(url)) {
-    return `https://www.youtube.com/embed/${url}`;
+  else if (url.includes('youtube.com/shorts/')) {
+    const match = url.match(/shorts\/([a-zA-Z0-9_-]{11})/);
+    if (match) {
+      videoId = match[1];
+      embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    }
+  }
+  // If it's just an ID
+  else if (url.length === 11 && /^[a-zA-Z0-9_-]+$/.test(url)) {
+    videoId = url;
+    embedUrl = `https://www.youtube.com/embed/${url}`;
+  }
+  // If it doesn't match but starts with http, return as is (might be Vimeo or other)
+  else if (url.startsWith('http')) {
+    embedUrl = url;
   }
   
-  return url;
+  return { embedUrl, videoId };
 }
 
-const embedUrl = normalizeYouTubeUrl(videoUrl);
+const { embedUrl, videoId } = parseYouTubeUrl(videoUrl);
+
+// Generate YouTube thumbnail if it's a YouTube video
+const thumbnailUrl = videoId 
+  ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+  : '';
 ---
 
 {embedUrl && (
   <div class="mb-12">
     <div class="relative w-full" style="padding-bottom: 56.25%;">
       <iframe
-        class="absolute inset-0 w-full h-full rounded-lg"
+        class="absolute inset-0 w-full h-full rounded-lg shadow-lg"
         src={embedUrl}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -55,3 +81,10 @@ const embedUrl = normalizeYouTubeUrl(videoUrl);
     <p class="text-slate-400 text-sm mt-3 italic">{title}</p>
   </div>
 )}
+
+<script define:vars={{videoId, thumbnailUrl}}>
+  // Store thumbnail URL in window for use in parent component
+  if (videoId) {
+    window.__videoThumbnail = thumbnailUrl;
+  }
+</script>

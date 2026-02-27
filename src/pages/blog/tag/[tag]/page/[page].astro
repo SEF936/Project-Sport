@@ -4,6 +4,36 @@ import BlogCard from '../../../../../components/BlogCard.astro';
 import Pagination from '../../../../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 
+// Helper to extract YouTube video ID and generate thumbnail
+function getYouTubeThumbnail(videoUrl: string): string | null {
+  if (!videoUrl) return null;
+  
+  let videoId = '';
+  
+  // youtube.com/watch?v=ID format
+  const watchMatch = videoUrl.match(/v=([a-zA-Z0-9_-]{11})/);
+  if (watchMatch) videoId = watchMatch[1];
+  
+  // youtu.be/ID format
+  const shortMatch = videoUrl.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if (shortMatch) videoId = shortMatch[1];
+  
+  // youtube.com/shorts/ID format
+  const shortsMatch = videoUrl.match(/shorts\/([a-zA-Z0-9_-]{11})/);
+  if (shortsMatch) videoId = shortsMatch[1];
+  
+  // youtube.com/embed/ID format
+  const embedMatch = videoUrl.match(/embed\/([a-zA-Z0-9_-]{11})/);
+  if (embedMatch) videoId = embedMatch[1];
+  
+  // If it's just an ID
+  if (!videoId && videoUrl.length === 11 && /^[a-zA-Z0-9_-]+$/.test(videoUrl)) {
+    videoId = videoUrl;
+  }
+  
+  return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+}
+
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection('blog');
   const publishedPosts = allBlogPosts.filter(post => !post.data.draft);
@@ -66,15 +96,22 @@ const currentPosts = allPosts.slice(start, end);
       <p class="text-slate-300 mb-12">Page {page} — {totalPages} pages</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {currentPosts.map((post: any) => (
-          <BlogCard 
-            title={post.data.title}
-            description={post.data.excerpt}
-            slug={post.slug}
-            image={post.data.coverImage}
-            tags={post.data.tags}
-          />
-        ))}
+        {currentPosts.map((post: any) => {
+          // Use YouTube thumbnail if video exists, otherwise use coverImage
+          const displayImage = post.data.videoUrl 
+            ? getYouTubeThumbnail(post.data.videoUrl) || post.data.coverImage
+            : post.data.coverImage;
+          
+          return (
+            <BlogCard 
+              title={post.data.title}
+              description={post.data.excerpt}
+              slug={post.slug}
+              image={displayImage}
+              tags={post.data.tags}
+            />
+          );
+        })}
       </div>
 
       <Pagination 
