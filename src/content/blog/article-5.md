@@ -1,10 +1,13 @@
 ---
-title: "Entraînement HIIT pour brûler des calories rapidement"
-date: "2025-02-25"
-excerpt: "Séance HIIT de 20 minutes pour maximiser la combustion de graisses."
-coverImage: "https://images.unsplash.com/photo-1506109773649-d080d00b53b4?w=600&h=400&fit=crop"
-tags: ["HIIT", "calories", "cardio"]
-videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+title: Entraînement HIIT pour brûler des calories rapidement
+date: 2025-02-25
+excerpt: Séance HIIT de 20 minutes pour maximiser la combustion de graisses.
+coverImage: https://youtu.be/odXg3bWfkVE?si=pQo3MMVBMskTQrMD
+tags:
+  - HIIT
+  - calories
+  - cardio
+videoUrl: https://youtu.be/odXg3bWfkVE?si=pQo3MMVBMskTQrMD
 draft: false
 ---
 
