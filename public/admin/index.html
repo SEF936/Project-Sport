@@ -4,21 +4,38 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestionnaire de Contenu</title>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  </head>
-  <body>
     <!-- Netlify Identity Widget -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  </body>
-  <script>
-    window.CMS_MANUAL_INIT = true;
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.loginWithExternalProvider('github');
+  </head>
+  <body>
+    <!-- Decap CMS will mount here -->
+    <div id="app"></div>
+    
+    <!-- Decap CMS Script -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    
+    <script>
+      // Wait for both libs to load
+      window.addEventListener('load', function() {
+        // Check if netlifyIdentity exists
+        if (window.netlifyIdentity) {
+          // Initialize Decap CMS
+          if (window.CMS) {
+            window.CMS.init({
+              config: {
+                backend: {
+                  name: 'git-gateway',
+                  branch: 'main'
+                }
+              }
+            });
+          } else {
+            console.error('Decap CMS not loaded');
+          }
+        } else {
+          console.error('Netlify Identity not loaded');
         }
       });
-    }
-    CMS.init({ config: { local_backend: false } });
-  </script>
+    </script>
+  </body>
 </html>
