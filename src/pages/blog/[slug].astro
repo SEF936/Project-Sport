@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  const publishedEntries = blogEntries.filter(post => !post.data.draft);
+  
+  return publishedEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+interface Props {
+  entry: any;
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, date, excerpt, coverImage, tags, videoUrl } = entry.data;
+
+// Related articles (same tags, exclude current)
+const allBlogPosts = await getCollection('blog');
+const publishedPosts = allBlogPosts.filter(post => !post.data.draft && post.slug !== entry.slug);
+const relatedPosts = publishedPosts
+  .filter(post => post.data.tags.some((tag: string) => tags.includes(tag)))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+// Estimated reading time from rendered component
+const rendered = await entry.render();
+const htmlLength = rendered.html || '';
+const wordCount = htmlLength.split(/\s+/).filter((w: string) => w.length > 0).length;
+const readingTime = Math.ceil(wordCount / 200) || 1;
+
+const publishDate = new Date(date).toLocaleDateString('fr-FR', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+const canonicalURL = new URL(`/blog/${entry.slug}`, Astro.url);
+---
+
+<BaseLayout title={title} description={excerpt} image={coverImage}>
+  <article class="bg-slate-900 py-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <!-- Meta info -->
+      <div class="flex flex-wrap items-center gap-4 text-slate-400 text-sm mb-8">
+        <time datetime={date}>{publishDate}</time>
+        <span>•</span>
+        <span>{readingTime} min de lecture</span>
+      </div>
+
+      <!-- Title and tags -->
+      <h1 class="text-5xl font-bold mb-4">{title}</h1>
+      <div class="flex flex-wrap gap-2 mb-12">
+        {tags.map((tag: string) => (
+          <a 
+            href={`/blog/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
+            class="bg-orange-500/20 text-orange-300 px-3 py-1 rounded-full text-sm hover:bg-orange-500/40 transition"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+
+      <!-- Cover image -->
+      <img 
+        src={coverImage} 
+        alt={title}
+        class="w-full h-96 object-cover rounded-lg mb-12 shadow-lg"
+        loading="lazy"
+      />
+
+      <!-- Video embed if present -->
+      {videoUrl && (
+        <div class="mb-12 aspect-video rounded-lg overflow-hidden">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            src={videoUrl} 
+            title="Article Video"
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+          ></iframe>
+        </div>
+      )}
+
+      <!-- Content -->
+      <div class="prose prose-invert max-w-none mb-12">
+        <Content />
+      </div>
+
+      <!-- Related articles -->
+      {relatedPosts.length > 0 && (
+        <section class="border-t-2 border-slate-700 pt-12">
+          <h2 class="text-3xl font-bold mb-8">Articles Similaires</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {relatedPosts.map((post: any) => (
+              <BlogCard 
+                title={post.data.title}
+                description={post.data.excerpt}
+                slug={post.slug}
+                image={post.data.coverImage}
+                tags={post.data.tags}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Back link -->
+      <div class="mt-16 text-center">
+        <a href="/blog" class="text-orange-400 hover:text-orange-300 transition">
+          ← Retour au blog
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  :global(.prose) {
+    @apply text-slate-300;
+  }
+
+  :global(.prose h2) {
+    @apply text-2xl font-bold text-white mt-8 mb-4;
+  }
+
+  :global(.prose h3) {
+    @apply text-xl font-bold text-white mt-6 mb-3;
+  }
+
+  :global(.prose a) {
+    @apply text-orange-400 underline hover:text-orange-300;
+  }
+
+  :global(.prose strong) {
+    @apply text-white font-bold;
+  }
+
+  :global(.prose code) {
+    @apply bg-slate-800 text-orange-300 px-2 py-1 rounded text-sm;
+  }
+
+  :global(.prose pre) {
+    @apply bg-slate-800 p-4 rounded-lg overflow-x-auto;
+  }
+
+  :global(.prose li) {
+    @apply text-slate-300;
+  }
+
+  :global(.prose ul, .prose ol) {
+    @apply ml-6;
+  }
+</style>

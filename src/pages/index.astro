@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import BlogCard from '../components/BlogCard.astro';
+import CTASection from '../components/CTASection.astro';
+import Testimonials from '../components/Testimonials.astro';
+import { getCollection } from 'astro:content';
+
+const allBlogPosts = await getCollection('blog');
+const publishedPosts = allBlogPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+---
+
+<BaseLayout title="Accueil" description="Coach sportif professionnel pour vos objectifs fitness et wellness">
+  <Hero />
+  
+  <section id="services" class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-12">Mes Services</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ServiceCard 
+          title="Coaching Personnalisé"
+          description="Programme d'entraînement adapté à vos objectifs et votre niveau."
+          icon="🎯"
+        />
+        <ServiceCard 
+          title="Nutrition Sport"
+          description="Plan nutritionnel complet pour optimiser vos résultats."
+          icon="🥗"
+        />
+        <ServiceCard 
+          title="Coaching Mental"
+          description="Accompagnement psychologique pour surmonter vos limites."
+          icon="🧠"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-slate-950 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-12">Derniers Articles</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        {publishedPosts.map(post => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.excerpt}
+            slug={post.slug}
+            image={post.data.coverImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+      <div class="text-center">
+        <a href="/blog" class="inline-block bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-bold transition duration-300">
+          Voir tous les articles →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Testimonials />
+  <CTASection />
+</BaseLayout>

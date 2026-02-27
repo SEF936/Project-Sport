@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+const allBlogPosts = await getCollection('blog');
+const publishedPosts = allBlogPosts.filter(post => !post.data.draft);
+
+// Collect all unique tags with count
+const tagMap = new Map<string, number>();
+publishedPosts.forEach(post => {
+  post.data.tags.forEach((tag: string) => {
+    const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
+    tagMap.set(tagSlug, (tagMap.get(tagSlug) || 0) + 1);
+  });
+});
+
+const tags = Array.from(tagMap.entries())
+  .sort((a, b) => b[1] - a[1]);
+---
+
+<BaseLayout title="Tags" description="Tous les tags du blog">
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-12">Tags ({tags.length})</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {tags.map(([tag, count]) => (
+          <a 
+            href={`/blog/tag/${tag}`}
+            class="bg-slate-800 hover:bg-slate-700 border border-orange-500/20 hover:border-orange-500/50 p-6 rounded-lg transition"
+          >
+            <h3 class="text-xl font-bold text-orange-400 mb-2">#{tag}</h3>
+            <p class="text-slate-400">{count} article{count > 1 ? 's' : ''}</p>
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-12 text-center">
+        <a href="/blog" class="text-orange-400 hover:text-orange-300">← Retour au blog</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

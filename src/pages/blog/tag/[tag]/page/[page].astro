@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../../../components/BlogCard.astro';
+import Pagination from '../../../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog');
+  const publishedPosts = allBlogPosts.filter(post => !post.data.draft);
+
+  const tagMap = new Map<string, any[]>();
+  publishedPosts.forEach(post => {
+    post.data.tags.forEach((tag: string) => {
+      const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
+      if (!tagMap.has(tagSlug)) tagMap.set(tagSlug, []);
+      tagMap.get(tagSlug)!.push(post);
+    });
+  });
+
+  const paths: any[] = [];
+  tagMap.forEach((posts, tag) => {
+    const POSTS_PER_PAGE = 6;
+    const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+    
+    for (let i = 2; i <= totalPages; i++) {
+      paths.push({
+        params: { tag, page: String(i) },
+        props: { 
+          tag,
+          page: i,
+          posts: posts.sort((a: any, b: any) => 
+            new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+          ),
+          totalPages
+        }
+      });
+    }
+  });
+
+  return paths;
+}
+
+interface Props {
+  tag: string;
+  page: number;
+  posts: any[];
+  totalPages: number;
+}
+
+const { tag, page, posts: allPosts, totalPages } = Astro.props;
+const displayTag = tag.split('-').join(' ');
+
+const POSTS_PER_PAGE = 6;
+const start = (page - 1) * POSTS_PER_PAGE;
+const end = start + POSTS_PER_PAGE;
+const currentPosts = allPosts.slice(start, end);
+---
+
+<BaseLayout title={`${displayTag} — Page ${page}`} description={`Articles ${displayTag} - Page ${page}`}>
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center gap-4 mb-2">
+        <h1 class="text-5xl font-bold">#${displayTag}</h1>
+        <span class="bg-orange-500 text-white px-4 py-2 rounded-full font-bold">{allPosts.length}</span>
+      </div>
+      <p class="text-slate-300 mb-12">Page {page} — {totalPages} pages</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {currentPosts.map((post: any) => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.excerpt}
+            slug={post.slug}
+            image={post.data.coverImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      <Pagination 
+        currentPage={page}
+        totalPages={totalPages}
+        baseUrl={`/blog/tag/${tag}/`}
+      />
+    </div>
+  </div>
+</BaseLayout>

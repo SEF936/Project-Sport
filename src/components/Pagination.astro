@@ -1,0 +1,52 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props as Props;
+
+const generateUrl = (page: number) => {
+  if (page === 1) return baseUrl;
+  return `${baseUrl}page/${page}`;
+};
+
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+---
+
+<nav class="flex justify-center items-center gap-2 my-12" aria-label="Pagination">
+  {currentPage > 1 && (
+    <>
+      <a href={generateUrl(1)} rel="first" class="px-3 py-2 rounded bg-orange-500 hover:bg-orange-600 transition">
+        ← Première
+      </a>
+      <a href={generateUrl(currentPage - 1)} rel="prev" class="px-3 py-2 rounded bg-slate-700 hover:bg-slate-600 transition">
+        Précédente
+      </a>
+    </>
+  )}
+  
+  <div class="flex gap-1">
+    {pages.map(page => (
+      page === currentPage ? (
+        <span class="px-3 py-2 rounded bg-orange-500 font-bold">{page}</span>
+      ) : (
+        <a href={generateUrl(page)} class="px-3 py-2 rounded bg-slate-700 hover:bg-slate-600 transition">
+          {page}
+        </a>
+      )
+    ))}
+  </div>
+
+  {currentPage < totalPages && (
+    <>
+      <a href={generateUrl(currentPage + 1)} rel="next" class="px-3 py-2 rounded bg-slate-700 hover:bg-slate-600 transition">
+        Suivante
+      </a>
+      <a href={generateUrl(totalPages)} rel="last" class="px-3 py-2 rounded bg-orange-500 hover:bg-orange-600 transition">
+        Dernière →
+      </a>
+    </>
+  )}
+</nav>

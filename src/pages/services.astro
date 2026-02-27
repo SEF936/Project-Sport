@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import CTASection from '../components/CTASection.astro';
+---
+
+<BaseLayout title="Services" description="Découvrez tous les services de coaching sportif proposés">
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-8">Mes Services</h1>
+      <p class="text-xl text-slate-300 mb-12">
+        Je propose une gamme complète de services pour vous aider à atteindre vos objectifs fitness et wellness.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <ServiceCard 
+          title="Coaching Personnalisé"
+          description="Programme d'entraînement sur mesure adapté à votre niveau et vos objectifs spécifiques."
+          icon="🎯"
+        />
+        <ServiceCard 
+          title="Nutrition Sport"
+          description="Plan nutritionnel complet pour optimiser votre récupération et vos résultats."
+          icon="🥗"
+        />
+        <ServiceCard 
+          title="Coaching Mental"
+          description="Accompagnement psychologique pour surmonter les limites mentales."
+          icon="🧠"
+        />
+        <ServiceCard 
+          title="Programmes en groupe"
+          description="Séances collectives motivantes et conviviales pour tous les niveaux."
+          icon="👥"
+        />
+        <ServiceCard 
+          title="Suivi à distance"
+          description="Coaching en ligne pour les personnes ayant un emploi du temps chargé."
+          icon="💻"
+        />
+        <ServiceCard 
+          title="Préparation événement"
+          description="Préparation spéciale pour des compétitions ou des challenges spécifiques."
+          icon="🏆"
+        />
+      </div>
+
+      <div class="bg-gradient-to-r from-slate-800 to-slate-900 p-12 rounded-lg mb-12 border border-orange-500/20">
+        <h2 class="text-3xl font-bold mb-6">Tarifs</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-slate-900 p-6 rounded-lg">
+            <h3 class="text-xl font-bold mb-4">Séance Unique</h3>
+            <p class="text-3xl font-bold text-orange-400 mb-2">60€</p>
+            <p class="text-slate-400 text-sm">Idéal pour découvrir</p>
+          </div>
+          <div class="bg-slate-900 p-6 rounded-lg border border-orange-500">
+            <h3 class="text-xl font-bold mb-4">Formule Mensuelle</h3>
+            <p class="text-3xl font-bold text-orange-400 mb-2">200€</p>
+            <p class="text-slate-400 text-sm">4 séances + suivi</p>
+          </div>
+          <div class="bg-slate-900 p-6 rounded-lg">
+            <h3 class="text-xl font-bold mb-4">Formule Annuelle</h3>
+            <p class="text-3xl font-bold text-orange-400 mb-2">1999€</p>
+            <p class="text-slate-400 text-sm">Meilleure économie</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <CTASection />
+</BaseLayout>

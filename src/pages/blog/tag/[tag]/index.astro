@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog');
+  const publishedPosts = allBlogPosts.filter(post => !post.data.draft);
+
+  const tagMap = new Map<string, any[]>();
+  publishedPosts.forEach(post => {
+    post.data.tags.forEach((tag: string) => {
+      const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
+      if (!tagMap.has(tagSlug)) tagMap.set(tagSlug, []);
+      tagMap.get(tagSlug)!.push(post);
+    });
+  });
+
+  return Array.from(tagMap.entries()).map(([tag, posts]) => ({
+    params: { tag },
+    props: { 
+      tag,
+      posts: posts.sort((a: any, b: any) => 
+        new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+      )
+    }
+  }));
+}
+
+interface Props {
+  tag: string;
+  posts: any[];
+}
+
+const { tag, posts } = Astro.props;
+const displayTag = tag.split('-').join(' ');
+const POSTS_PER_PAGE = 6;
+const currentPosts = posts.slice(0, POSTS_PER_PAGE);
+const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
+---
+
+<BaseLayout title={`Articles: ${displayTag}`} description={`Tous les articles avec le tag ${displayTag}`}>
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="flex items-center gap-4 mb-2">
+        <h1 class="text-5xl font-bold">#${displayTag}</h1>
+        <span class="bg-orange-500 text-white px-4 py-2 rounded-full font-bold">{posts.length}</span>
+      </div>
+      <p class="text-slate-300 mb-12">Affichage de {Math.min(POSTS_PER_PAGE, posts.length)} articles</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {currentPosts.map((post: any) => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.excerpt}
+            slug={post.slug}
+            image={post.data.coverImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div class="text-center mb-12">
+          <a href={`/blog/tag/${tag}/page/2`} class="inline-block bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded transition">
+            Voir plus d'articles →
+          </a>
+        </div>
+      )}
+
+      <div>
+        <a href="/blog/tags" class="text-orange-400 hover:text-orange-300">← Retour à tous les tags</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

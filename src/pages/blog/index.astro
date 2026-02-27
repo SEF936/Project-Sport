@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import { getCollection } from 'astro:content';
+
+const allBlogPosts = await getCollection('blog');
+const publishedPosts = allBlogPosts
+  .filter(post => !post.data.draft)
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const POSTS_PER_PAGE = 6;
+const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
+const start = 0;
+const end = POSTS_PER_PAGE;
+const currentPosts = publishedPosts.slice(start, end);
+---
+
+<BaseLayout title="Blog" description="Conseils et astuces pour transformer votre pratique sportive">
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-2">Blog & Ressources</h1>
+      <p class="text-xl text-slate-300 mb-12">Conseils, astuces et articles pour progresser en fitness</p>
+
+      <div class="mb-12">
+        <SearchBar />
+      </div>
+
+      <div class="flex gap-4 mb-8">
+        <a href="/blog" class="px-4 py-2 bg-orange-500 text-white rounded-lg font-bold">Tous les articles</a>
+        <a href="/blog/tags" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition">Voir les tags</a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {currentPosts.map(post => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.excerpt}
+            slug={post.slug}
+            image={post.data.coverImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <Pagination 
+          currentPage={1}
+          totalPages={totalPages}
+          baseUrl="/blog/"
+        />
+      )}
+    </div>
+  </div>
+</BaseLayout>

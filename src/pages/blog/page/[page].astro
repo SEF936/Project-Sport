@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection('blog');
+  const publishedPosts = allBlogPosts.filter(post => !post.data.draft);
+  
+  const POSTS_PER_PAGE = 6;
+  const totalPages = Math.ceil(publishedPosts.length / POSTS_PER_PAGE);
+
+  return Array.from({ length: totalPages }, (_, i) => ({
+    params: { page: String(i + 2) },
+    props: { 
+      posts: publishedPosts,
+      page: i + 2,
+      totalPages,
+    }
+  }));
+}
+
+interface Props {
+  posts: any[];
+  page: number;
+  totalPages: number;
+}
+
+const { posts: allPosts, page, totalPages } = Astro.props;
+
+const POSTS_PER_PAGE = 6;
+const sortedPosts = allPosts
+  .sort((a: any, b: any) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const start = (page - 1) * POSTS_PER_PAGE;
+const end = start + POSTS_PER_PAGE;
+const currentPosts = sortedPosts.slice(start, end);
+---
+
+<BaseLayout title={`Blog — Page ${page}`} description={`Articles et astuces fitness - Page ${page}`}>
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-6xl mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-2">Blog & Ressources</h1>
+      <p class="text-xl text-slate-300 mb-12">Page {page} — {totalPages} pages au total</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {currentPosts.map((post: any) => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.excerpt}
+            slug={post.slug}
+            image={post.data.coverImage}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      <Pagination 
+        currentPage={page}
+        totalPages={totalPages}
+        baseUrl="/blog/"
+      />
+    </div>
+  </div>
+</BaseLayout>

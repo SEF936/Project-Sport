@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+---
+
+<BaseLayout title="À Propos" description="Découvrez qui je suis et mon parcours en coaching sportif">
+  <div class="bg-slate-900 py-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <h1 class="text-5xl font-bold mb-8">À Propos de Moi</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div>
+          <img 
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop" 
+            alt="Coach sportif" 
+            class="rounded-lg shadow-lg"
+            loading="lazy"
+          />
+        </div>
+        <div class="space-y-6">
+          <p class="text-lg text-slate-300">
+            Depuis 10 ans, j'accompagne mes clients vers leurs objectifs de fitness et wellness. 
+            Ma passion est de créer des transformations durables en combinant science du sport et psychologie.
+          </p>
+          <p class="text-lg text-slate-300">
+            Diplômé en coaching sportif et nutrition, j'ai aidé plus de 500 personnes à transformer leur vie 
+            à travers une approche personnalisée et scientifique.
+          </p>
+          <div class="bg-slate-800 p-6 rounded-lg border border-orange-500/20">
+            <h3 class="font-bold text-orange-400 mb-4">Certifications</h3>
+            <ul class="space-y-2 text-slate-300">
+              <li>✅ Diplôme d'État Coach Sportif</li>
+              <li>✅ Certification Nutrition Sportive</li>
+              <li>✅ Coach Mentalité Sportive</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="text-center p-6 bg-slate-800 rounded-lg border border-orange-500/20">
+          <div class="text-4xl font-bold text-orange-500 mb-2">500+</div>
+          <p class="text-slate-300">Clients satisfaits</p>
+        </div>
+        <div class="text-center p-6 bg-slate-800 rounded-lg border border-orange-500/20">
+          <div class="text-4xl font-bold text-orange-500 mb-2">10+</div>
+          <p class="text-slate-300">Années d'expérience</p>
+        </div>
+        <div class="text-center p-6 bg-slate-800 rounded-lg border border-orange-500/20">
+          <div class="text-4xl font-bold text-orange-500 mb-2">95%</div>
+          <p class="text-slate-300">Taux de satisfaction</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <CTASection />
+</BaseLayout>

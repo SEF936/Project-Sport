@@ -1,0 +1,39 @@
+---
+export interface Props {
+  title: string;
+  href: string;
+  icon?: string;
+}
+
+const { title, href, icon } = Astro.props as Props;
+---
+
+<nav class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center gap-8">
+        <a href="/" class="text-2xl font-bold text-orange-500 hover:text-orange-400 transition">
+          🏋️ Coach Sportif
+        </a>
+        <ul class="hidden md:flex gap-6 items-center">
+          <li><a href="/" class="hover:text-orange-400 transition duration-200">Accueil</a></li>
+          <li><a href="/a-propos" class="hover:text-orange-400 transition duration-200">À Propos</a></li>
+          <li><a href="/services" class="hover:text-orange-400 transition duration-200">Services</a></li>
+          <li><a href="/blog" class="hover:text-orange-400 transition duration-200">Blog</a></li>
+          <li><a href="/contact" class="hover:text-orange-400 transition duration-200">Contact</a></li>
+        </ul>
+      </div>
+      <div class="flex items-center md:hidden">
+        <button id="mobile-menu" class="text-2xl">☰</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  @media (max-width: 768px) {
+    nav {
+      position: relative;
+    }
+  }
+</style>
