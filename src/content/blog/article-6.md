@@ -1,10 +1,13 @@
 ---
 title: "Psychologie du sport: rester motivé sur la durée"
-date: "2025-02-15"
-excerpt: "Stratégies mentales pour maintenir votre motivation et atteindre vos objectifs."
-coverImage: "https://images.unsplash.com/photo-1590488889692-c4ca22a90797?w=600&h=400&fit=crop"
-tags: ["psychologie", "motivation", "mindset"]
-videoUrl: ""
+date: 2025-02-15
+excerpt: Stratégies mentales pour maintenir votre motivation et atteindre vos objectifs.
+coverImage: https://youtu.be/Cqeew3GZ3Mg?si=rU3M8rqacwTxGAEM
+tags:
+  - psychologie
+  - motivation
+  - mindset
+videoUrl: https://youtu.be/Cqeew3GZ3Mg?si=rU3M8rqacwTxGAEM
 draft: false
 ---
 
