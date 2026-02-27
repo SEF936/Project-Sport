@@ -1,10 +1,13 @@
 ---
-title: "5 astuces pour vraiment progresser au fitness"
-date: "2025-02-20"
-excerpt: "Les erreurs à éviter et les principes clés pour des résultats durables."
-coverImage: "https://images.unsplash.com/photo-1521575107034-e3fb11b6b0ca?w=600&h=400&fit=crop"
-tags: ["fitness", "progression", "astuces"]
-videoUrl: ""
+title: 5 astuces pour vraiment progresser au fitness
+date: 2025-02-20
+excerpt: Les erreurs à éviter et les principes clés pour des résultats durables.
+coverImage: https://youtu.be/f0hGvEzwQkA?si=Gh726RzkCuuxmM4Q
+tags:
+  - fitness
+  - progression
+  - astuces
+videoUrl: https://youtu.be/f0hGvEzwQkA?si=Gh726RzkCuuxmM4Q
 draft: false
 ---
 
