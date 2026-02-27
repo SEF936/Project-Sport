@@ -4,11 +4,11 @@ const blogCollection = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    date: z.string(),
+    date: z.string().or(z.date()),
     excerpt: z.string(),
-    coverImage: z.string().url(),
-    tags: z.array(z.string()),
-    videoUrl: z.string().optional(),
+    coverImage: z.string(),
+    tags: z.array(z.string()).default([]),
+    videoUrl: z.string().optional().default(''),
     draft: z.boolean().default(false),
   }),
 });
